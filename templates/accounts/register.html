@@ -1,0 +1,52 @@
+{% extends "base/base.html" %}
+
+{% block title %}Registro{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2 class="mb-4">Crear una cuenta</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="mb-3">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                {{ form.username.errors }}
+            </div>
+            <div class="mb-3">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                {{ form.email.errors }}
+            </div>
+            <div class="mb-3">
+                {{ form.role.label_tag }}
+                {{ form.role }}
+                {{ form.role.errors }}
+            </div>
+            <div class="mb-3">
+                {{ form.university.label_tag }}
+                {{ form.university }}
+                {{ form.university.errors }}
+            </div>
+            <div class="mb-3">
+                {{ form.phone.label_tag }}
+                {{ form.phone }}
+                {{ form.phone.errors }}
+            </div>
+            <div class="mb-3">
+                {{ form.password1.label_tag }}
+                {{ form.password1 }}
+                {{ form.password1.errors }}
+            </div>
+            <div class="mb-3">
+                {{ form.password2.label_tag }}
+                {{ form.password2 }}
+                {{ form.password2.errors }}
+            </div>
+            <button type="submit" class="btn btn-primary">Registrarse</button>
+        </form>
+        <p class="mt-3">¿Ya tienes una cuenta? <a href="{% url 'accounts:login' %}">Inicia sesión</a></p>
+    </div>
+</div>
+{% endblock %}

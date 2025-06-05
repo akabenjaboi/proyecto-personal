@@ -1,0 +1,30 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<h1>{{ room.title }}</h1>
+<p><strong>Publicado por:</strong> {{ room.owner.username }}</p>
+<p><strong>Ciudad:</strong> {{ room.city }}</p>
+<p><strong>Precio:</strong> ${{ room.price }}</p>
+<p><strong>Descripción:</strong> {{ room.description }}</p>
+<p><strong>Disponible desde:</strong> {{ room.available_from }}</p>
+<p><strong>Hasta:</strong> {{ room.available_to }}</p>
+
+
+{% if room.image %}
+    <img src="{{ room.image.url }}" alt="Foto de la habitación" width="400">
+{% endif %}
+
+{% if user == room.owner %}
+    <p><a href="{% url 'listings:room_update' room.pk %}">Editar</a> |
+    <a href="{% url 'listings:room_delete' room.pk %}">Eliminar</a></p>
+{% endif %}
+
+{% if user.is_authenticated and user != room.owner %}
+    {% if not already_booked %}
+        <a href="{% url 'booking:booking_create' room.pk %}" class="btn btn-success">Reservar esta habitación</a>
+    {% else %}
+        <span class="badge bg-success">Ya reservaste esta habitación</span>
+    {% endif %}
+{% endif %}
+
+<a href="{% url 'listings:room_list' %}">← Volver a la lista</a>
+{% endblock %}

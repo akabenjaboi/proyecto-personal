@@ -1,0 +1,19 @@
+{% extends "base/base.html" %}
+
+{% block title %}{{ update|default_if_none:False|yesno:"Modificar reserva,Reservar habitación" }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2 class="mb-4">
+            {% if update %}Modificar reserva{% else %}Reservar habitación: {{ room.title }}{% endif %}
+        </h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">{% if update %}Actualizar{% else %}Reservar{% endif %}</button>
+            <a href="{% url 'booking:booking_list' %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

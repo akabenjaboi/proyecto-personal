@@ -1,0 +1,27 @@
+{% extends "base/base.html" %}
+
+
+
+{% block title %}Habitaciones disponibles{% endblock %}
+
+{% block content %}
+<p>Total habitaciones: {{ rooms|length }}</p>
+
+
+<h1>Habitaciones disponibles</h1>
+
+{% for room in rooms %}
+    <div>
+        <h2><a href="{% url 'listings:room_detail' room.pk %}">{{ room.title }}</a></h2>
+        <p>{{ room.city }} - ${{ room.price }}</p>
+        {% if room.image %}
+            <img src="{{ room.image.url }}" alt="Foto de {{ room.title }}" width="200">
+        {% endif %}
+    </div>
+{% empty %}
+    <p>No hay habitaciones publicadas aún.</p>
+{% endfor %}
+
+<a href="{% url 'listings:room_create' %}">Publicar nueva habitación</a>
+
+{% endblock %}

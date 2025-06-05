@@ -1,0 +1,19 @@
+<!--{% extends "base/base.html" %}-->
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<div class="text-center mt-5">
+    {% if user.is_authenticated %}
+        <h1>¡Bienvenido, {{ user.username }}!</h1>
+        <p class="lead">Nos alegra verte de nuevo.</p>
+        <a href="{% url 'accounts:logout' %}" class="btn btn-danger mt-3">Cerrar sesión</a>
+    {% else %}
+        <h1>Bienvenido a Mi Proyecto</h1>
+        <p class="lead">Por favor, inicia sesión o regístrate para continuar.</p>
+        <a href="{% url 'accounts:login' %}" class="btn btn-primary mt-3">Iniciar sesión</a>
+        <a href="{% url 'accounts:register' %}" class="btn btn-secondary mt-3">Registrarse</a>
+    {% endif %}
+     <a href="{% url 'listings:room_list' %}" class="btn btn-info mt-3">Ver más habitaciones</a>
+</div>
+{% endblock %}

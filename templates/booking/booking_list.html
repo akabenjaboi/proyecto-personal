@@ -1,0 +1,31 @@
+{% extends "base/base.html" %}
+
+{% block title %}Mis reservas{% endblock %}
+
+{% block content %}
+<h3>Mis reservas</h3>
+{% if my_bookings %}
+    <ul class="list-group">
+        {% for booking in my_bookings %}
+            <li class="list-group-item">
+                Habitación: <a href="{% url 'listings:room_detail' booking.room.pk %}">{{ booking.room.title }}</a><br>
+                Desde: {{ booking.start_date }}<br>
+                Hasta: {{ booking.end_date }}<br>
+                Arrendador: {{ booking.room.owner.username }}<br>
+                <strong>Estado:</strong>
+                {% if booking.status == 'approved' %}
+                    <span class="badge bg-success">{{ booking.get_status_display }}</span>
+                {% elif booking.status == 'rejected' %}
+                    <span class="badge bg-danger">{{ booking.get_status_display }}</span>
+                {% else %}
+                    <span class="badge bg-warning text-dark">{{ booking.get_status_display }}</span>
+                    <a href="{% url 'booking:booking_update' booking.pk %}" class="btn btn-sm btn-primary ms-2">Modificar</a>
+                    <a href="{% url 'booking:booking_delete' booking.pk %}" class="btn btn-sm btn-danger ms-2">Eliminar</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No tienes reservas aún.</p>
+{% endif %}
+{% endblock %}

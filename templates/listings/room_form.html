@@ -1,0 +1,10 @@
+{% extends 'base/base.html' %}
+{% block content %}
+<h1>Publicar nueva habitación</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Guardar</button>
+</form>
+<a href="{% url 'listings:room_list' %}">← Cancelar</a>
+{% endblock %}

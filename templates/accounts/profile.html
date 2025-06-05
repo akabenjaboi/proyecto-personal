@@ -1,0 +1,108 @@
+{% extends 'base/base.html' %}
+{% load dict_key %}
+
+{% block title %}Perfil de {{ user.username }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Perfil de {{ user.username }}</h2>
+    </div>
+    <div class="card-body">
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Rol:</strong> {{ user.role }}</p>
+        <p><strong>Universidad:</strong> {{ user.university }}</p>
+        <p><strong>Teléfono:</strong> {{ user.phone }}</p>
+        <a href="{% url 'accounts:editProfile' %}" class="btn btn-primary">Editar perfil</a>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Volver al Home</a>
+    </div>
+</div>
+
+<hr>
+
+<h3>Mis publicaciones</h3>
+{% if user_rooms %}
+    <ul class="list-group">
+        {% for room in user_rooms %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>
+                    <a href="{% url 'listings:room_detail' room.pk %}">{{ room.title }}</a>
+                    {% with approved_booking=approved_bookings|dict_key:room.pk %}
+                        {% if approved_booking %}
+                            <span class="badge bg-success ms-2">
+                                Reserva aprobada para {{ approved_booking.student.username }}
+                            </span>
+                        {% endif %}
+                    {% endwith %}
+                    {% if room.archived %}
+                        <span class="badge bg-secondary ms-2">Archivada</span>
+                    {% endif %}
+                </span>
+                <span>
+                    <a href="{% url 'listings:room_update' room.pk %}" class="btn btn-sm btn-warning">Modificar</a>
+                    <a href="{% url 'listings:room_archive' room.pk %}" class="btn btn-sm {% if room.archived %}btn-success{% else %}btn-secondary{% endif %}">
+                        {% if room.archived %}Desarchivar{% else %}Archivar{% endif %}
+                    </a>
+                    <a href="{% url 'listings:room_delete' room.pk %}" class="btn btn-sm btn-danger">Eliminar</a>
+                </span>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No has publicado habitaciones aún.</p>
+{% endif %}
+
+<hr>
+<h3>Mis reservas</h3>
+{% if my_bookings %}
+    <ul class="list-group">
+        {% for booking in my_bookings %}
+            <li class="list-group-item">
+                Habitación: <a href="{% url 'listings:room_detail' booking.room.pk %}">{{ booking.room.title }}</a><br>
+                Desde: {{ booking.start_date }}<br>
+                Hasta: {{ booking.end_date }}<br>
+                Arrendador: {{ booking.room.owner.username }}<br>
+                <strong>Estado:</strong>
+                {% if booking.status == 'approved' %}
+                    <span class="badge bg-success">{{ booking.get_status_display }}</span>
+                {% elif booking.status == 'rejected' %}
+                    <span class="badge bg-danger">{{ booking.get_status_display }}</span>
+                {% else %}
+                    <span class="badge bg-warning text-dark">{{ booking.get_status_display }}</span>
+                    <a href="{% url 'booking:booking_update' booking.pk %}" class="btn btn-sm btn-primary ms-2">Modificar</a>
+                    <a href="{% url 'booking:booking_delete' booking.pk %}" class="btn btn-sm btn-danger ms-2">Eliminar</a>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No tienes reservas aún.</p>
+{% endif %}
+
+<h3>Solicitudes de reserva:</h3>
+{% for room in user_rooms %}
+    {% with bookings=room.bookings.all %}
+        {% if bookings %}
+            <ul>
+            {% for booking in bookings %}
+                <li>
+                    {{ booking.student.username }}: {{ booking.start_date }} a {{ booking.end_date }} - Estado: {{ booking.get_status_display }}
+                    {% if booking.status == 'pending' %}
+                        <form method="post" action="{% url 'booking:booking_approve' booking.pk %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm">Aprobar</button>
+                        </form>
+                        <form method="post" action="{% url 'booking:booking_reject' booking.pk %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Rechazar</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No hay solicitudes.</p>
+        {% endif %}
+    {% endwith %}
+{% endfor %}
+{% endblock %}

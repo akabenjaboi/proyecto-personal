@@ -1,0 +1,20 @@
+{% extends "base/base.html" %}
+
+{% block title %}Detalle de reserva{% endblock %}
+
+{% block content %}
+<div class="card mt-4">
+    <div class="card-header">
+        <h2>Reserva de {{ booking.room.title }}</h2>
+    </div>
+    <div class="card-body">
+        <p><strong>Habitación:</strong> <a href="{% url 'listings:room_detail' booking.room.pk %}">{{ booking.room.title }}</a></p>
+        <p><strong>Arrendador:</strong> {{ booking.room.owner.username }}</p>
+        <p><strong>Estudiante:</strong> {{ booking.student.username }}</p>
+        <p><strong>Desde:</strong> {{ booking.start_date }}</p>
+        <p><strong>Hasta:</strong> {{ booking.end_date }}</p>
+        <p><strong>Fecha de reserva:</strong> {{ booking.created_at }}</p>
+        <a href="{% url 'booking:booking_list' %}" class="btn btn-primary">Volver a mis reservas</a>
+    </div>
+</div>
+{% endblock %}
