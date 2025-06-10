@@ -1,1 +1,8 @@
 venv/
+
+# Archivos de base de datos locales
+db.sqlite3
+*.sqlite3
+
+# Archivos de migraciones compilados
+*.pyc
