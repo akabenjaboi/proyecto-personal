@@ -1,0 +1,19 @@
+<h3>Valoraciones</h3>
+{% if reviews %}
+    <p>Promedio de calificación: {{ average_rating|floatformat:1 }}/5</p>
+    <ul class="list-group mb-3">
+        {% for review in reviews %}
+            <li class="list-group-item">
+                <strong>{{ review.user.username }}</strong> - {{ review.rating }}/5<br>
+                {{ review.comment }}<br>
+                <small>{{ review.created_at|date:"d/m/Y H:i" }}</small>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No hay valoraciones aún.</p>
+{% endif %}
+
+{% if user.is_authenticated and not user_reviewed %}
+    <a href="{% url 'reviews:add_review' room.pk %}" class="btn btn-primary">Agregar valoración</a>
+{% endif %}

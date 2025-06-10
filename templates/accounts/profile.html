@@ -79,7 +79,7 @@
     <p>No tienes reservas aún.</p>
 {% endif %}
 
-<h3>Solicitudes de reserva:</h3>
+<h3>Solicitudes de reserva a tus publicaciones:</h3>
 {% for room in user_rooms %}
     {% with bookings=room.bookings.all %}
         {% if bookings %}

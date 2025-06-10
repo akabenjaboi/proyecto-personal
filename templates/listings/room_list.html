@@ -1,27 +1,38 @@
 {% extends "base/base.html" %}
-
+{% load static %}
 
 
 {% block title %}Habitaciones disponibles{% endblock %}
 
 {% block content %}
-<p>Total habitaciones: {{ rooms|length }}</p>
-
-
-<h1>Habitaciones disponibles</h1>
-
-{% for room in rooms %}
-    <div>
-        <h2><a href="{% url 'listings:room_detail' room.pk %}">{{ room.title }}</a></h2>
-        <p>{{ room.city }} - ${{ room.price }}</p>
-        {% if room.image %}
-            <img src="{{ room.image.url }}" alt="Foto de {{ room.title }}" width="200">
-        {% endif %}
-    </div>
-{% empty %}
-    <p>No hay habitaciones publicadas aún.</p>
-{% endfor %}
-
-<a href="{% url 'listings:room_create' %}">Publicar nueva habitación</a>
-
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0">Habitaciones disponibles</h1>
+    <a href="{% url 'listings:room_create' %}" class="btn btn-primary">Publicar nueva habitación</a>
+  </div>
+  <p>Total habitaciones: {{ rooms|length }}</p>
+  <div class="row">
+    {% for room in rooms %}
+      <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+          {% if room.images.first %}
+            <img src="{{ room.images.first.image.url }}" class="card-img-top" alt="Foto de {{ room.title }}">
+          {% else %}
+            <img src="{% static 'img/no-image.png' %}" class="card-img-top" alt="Sin imagen">
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">
+              <a href="{% url 'listings:room_detail' room.pk %}" class="text-decoration-none">{{ room.title }}</a>
+            </h5>
+            <p class="card-text">{{ room.city }} - ${{ room.price }}</p>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-info text-center">No hay habitaciones publicadas aún.</div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
 {% endblock %}

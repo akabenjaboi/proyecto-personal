@@ -1,10 +1,44 @@
 {% extends 'base/base.html' %}
 {% block content %}
-<h1>Publicar nueva habitación</h1>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Guardar</button>
-</form>
-<a href="{% url 'listings:room_list' %}">← Cancelar</a>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h3 class="mb-0">Publicar nueva habitación</h3>
+        </div>
+        <div class="card-body">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            {% for field in form %}
+              <div class="mb-3">
+                {{ field.label_tag }} {{ field }}
+                {% if field.help_text %}
+                  <div class="form-text">{{ field.help_text }}</div>
+                {% endif %}
+                {% for error in field.errors %}
+                  <div class="text-danger small">{{ error }}</div>
+                {% endfor %}
+              </div>
+            {% endfor %}
+            <h5 class="mt-4">Fotos (máx. 4):</h5>
+            {{ formset.management_form }}
+            <div class="row">
+              {% for image_form in formset %}
+                <div class="col-6 col-md-3 mb-3">
+                  <div class="border rounded p-2 h-100">
+                    {{ image_form.image.label_tag }} {{ image_form.image }}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary">Publicar habitación</button>
+            <a href="{% url 'listings:room_list' %}" class="btn btn-secondary ms-2">Cancelar</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

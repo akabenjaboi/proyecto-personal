@@ -1,30 +1,62 @@
 {% extends 'base/base.html' %}
+{% load static %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/room_detail.css' %}">
+{% endblock %}
 {% block content %}
-<h1>{{ room.title }}</h1>
-<p><strong>Publicado por:</strong> {{ room.owner.username }}</p>
-<p><strong>Ciudad:</strong> {{ room.city }}</p>
-<p><strong>Precio:</strong> ${{ room.price }}</p>
-<p><strong>Descripción:</strong> {{ room.description }}</p>
-<p><strong>Disponible desde:</strong> {{ room.available_from }}</p>
-<p><strong>Hasta:</strong> {{ room.available_to }}</p>
-
-
-{% if room.image %}
-    <img src="{{ room.image.url }}" alt="Foto de la habitación" width="400">
-{% endif %}
-
-{% if user == room.owner %}
-    <p><a href="{% url 'listings:room_update' room.pk %}">Editar</a> |
-    <a href="{% url 'listings:room_delete' room.pk %}">Eliminar</a></p>
-{% endif %}
-
-{% if user.is_authenticated and user != room.owner %}
-    {% if not already_booked %}
-        <a href="{% url 'booking:booking_create' room.pk %}" class="btn btn-success">Reservar esta habitación</a>
-    {% else %}
-        <span class="badge bg-success">Ya reservaste esta habitación</span>
-    {% endif %}
-{% endif %}
-
-<a href="{% url 'listings:room_list' %}">← Volver a la lista</a>
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="card-title">{{ room.title }}</h2>
+          <h6 class="card-subtitle mb-2 text-muted">Publicado por: {{ room.owner.username }}</h6>
+          <p class="mb-1"><strong>Ciudad:</strong> {{ room.city }}</p>
+          <p class="mb-1"><strong>Precio:</strong> ${{ room.price }}</p>
+          <p class="mb-1"><strong>Disponible desde:</strong> {{ room.available_from }}</p>
+          <p class="mb-3"><strong>Hasta:</strong> {{ room.available_to }}</p>
+          <p class="card-text">{{ room.description }}</p>
+          {% if user == room.owner %}
+            <a href="{% url 'listings:room_update' room.pk %}" class="btn btn-outline-primary btn-sm">Editar</a>
+            <a href="{% url 'listings:room_delete' room.pk %}" class="btn btn-outline-danger btn-sm">Eliminar</a>
+          {% endif %}
+          {% if user.is_authenticated and user != room.owner %}
+            {% if not already_booked %}
+              <a href="{% url 'booking:booking_create' room.pk %}" class="btn btn-success mt-2">Reservar esta habitación</a>
+            {% else %}
+              <span class="badge bg-success mt-2">Ya reservaste esta habitación</span>
+            {% endif %}
+          {% endif %}
+          <a href="{% url 'listings:room_list' %}" class="btn btn-link mt-2">← Volver a la lista</a>
+        </div>
+      </div>
+      {% include "reviews/review_list.html" with reviews=room.reviews.all user_reviewed=user_reviewed room=room average_rating=average_rating %}
+    </div>
+    <div class="col-md-4">
+      {% if room.images.all %}
+        <div id="roomImagesCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            {% for img in room.images.all %}
+              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ img.image.url }}" class="d-block w-100 rounded" alt="Foto de la habitación">
+              </div>
+            {% endfor %}
+          </div>
+          {% if room.images.count > 1 %}
+            <button class="carousel-control-prev" type="button" data-bs-target="#roomImagesCarousel" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#roomImagesCarousel" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Siguiente</span>
+            </button>
+          {% endif %}
+        </div>
+      {% else %}
+        <div class="alert alert-secondary text-center">Sin imágenes disponibles</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}

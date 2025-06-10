@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from listings.models import Room
@@ -12,15 +13,36 @@ def booking_create(request, room_id):
         if form.is_valid():
             start = form.cleaned_data['start_date']
             end = form.cleaned_data['end_date']
+            # Solo bloquea si hay una reserva aprobada en esas fechas
             overlap = Booking.objects.filter(
                 room=room,
                 status='approved',
                 start_date__lt=end,
                 end_date__gt=start
             ).exists()
+            # Solo bloquea si el usuario ya tiene una reserva pendiente o aprobada para esas fechas
+            user_pending_or_approved = Booking.objects.filter(
+                room=room,
+                student=request.user,
+                status__in=['pending', 'approved'],
+                start_date__lt=end,
+                end_date__gt=start
+            ).exists()
+            # Verifica si ya tuvo una reserva rechazada en esas fechas
+            user_rejected = Booking.objects.filter(
+                room=room,
+                student=request.user,
+                status='rejected',
+                start_date__lt=end,
+                end_date__gt=start
+            ).exists()
             if overlap:
                 form.add_error(None, "La habitación ya está reservada en esas fechas.")
+            elif user_pending_or_approved:
+                form.add_error(None, "Ya tienes una reserva pendiente o aprobada para esta habitación en esas fechas.")
             else:
+                if user_rejected:
+                    messages.info(request, "Tu reserva anterior para estas fechas fue rechazada. Puedes intentarlo nuevamente.")
                 booking = form.save(commit=False)
                 booking.student = request.user
                 booking.room = room
@@ -37,7 +59,7 @@ def booking_detail(request, pk):
 
 @login_required
 def booking_list(request):
-    my_bookings = Booking.objects.filter(student=request.user)
+    my_bookings = Booking.objects.filter(student=request.user).order_by('created_at')
     return render(request, 'booking/booking_list.html', {'my_bookings': my_bookings})
 
 @login_required

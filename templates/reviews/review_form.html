@@ -1,0 +1,11 @@
+{% extends "base/base.html" %}
+{% block title %}Agregar valoración{% endblock %}
+{% block content %}
+<h2>Agregar valoración para {{ room.title }}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Enviar</button>
+    <a href="{% url 'listings:room_detail' room.pk %}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

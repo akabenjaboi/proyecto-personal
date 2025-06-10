@@ -26,4 +26,5 @@ urlpatterns = [
     path('', home_view, name='home'),  # Esta línea hace que / muestre el home
     path('listings/', include(('listings.urls', 'listings'), namespace='listings')),  # Asegúrate de que 'listings' esté correctamente configurado
     path('booking/', include(('booking.urls', 'booking'), namespace='booking')),
+    path('reviews/', include(('reviews.urls', 'reviews'), namespace='reviews')),
 ]

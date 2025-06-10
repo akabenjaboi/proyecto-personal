@@ -1,0 +1,6 @@
+.custom-alert-bg {
+  background: rgba(30, 30, 30, 0.85) !important;
+  color: #fff !important;
+  border: none !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}

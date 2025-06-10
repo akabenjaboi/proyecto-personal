@@ -1,9 +1,8 @@
 from django.db import models
+from django.conf import settings
 
 # Create your models here.
 # listings/models.py
-from django.db import models
-from django.conf import settings
 
 class Room(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -14,9 +13,12 @@ class Room(models.Model):
     address = models.CharField(max_length=200)
     available_from = models.DateField()
     available_to = models.DateField()
-    image = models.ImageField(upload_to='room_images/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     archived = models.BooleanField(default=False)  # Nuevo campo
 
     def __str__(self):
         return self.title
+
+class RoomImage(models.Model):
+    room = models.ForeignKey(Room, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='room_images/')
