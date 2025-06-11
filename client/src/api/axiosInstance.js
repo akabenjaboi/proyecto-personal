@@ -32,7 +32,7 @@ api.interceptors.response.use(
           localStorage.setItem("access_token", res.data.access);
           originalRequest.headers["Authorization"] = "Bearer " + res.data.access;
           return api(originalRequest);
-        } catch (refreshError) {
+        } catch {
           localStorage.removeItem("access_token");
           localStorage.removeItem("refresh_token");
           window.location.href = "/login"; // Redirige a login si el refresh falla
