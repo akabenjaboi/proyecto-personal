@@ -1,5 +1,5 @@
 Superuser: admin
 DjangoPython1234
 
-Benjamín
+Benjamin
 goku1234

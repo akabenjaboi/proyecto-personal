@@ -1,0 +1,133 @@
+{
+  "info": {
+    "name": "Users API JWT",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Obtener Token JWT",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"tu_usuario\",\n  \"password\": \"tu_contraseña\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/api/token/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "token", ""]
+        }
+      }
+    },
+    {
+      "name": "Listar Usuarios",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/accounts/api/users/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["accounts", "api", "users", ""]
+        }
+      }
+    },
+    {
+      "name": "Crear Usuario",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"nuevo_usuario\",\n  \"email\": \"nuevo@mail.com\",\n  \"first_name\": \"Nuevo\",\n  \"last_name\": \"Usuario\",\n  \"role\": \"student\",\n  \"university\": \"IPN\",\n  \"phone\": \"5559876543\",\n  \"profile_image\": null,\n  \"birth_date\": \"2001-05-10\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/accounts/api/users/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["accounts", "api", "users", ""]
+        }
+      }
+    },
+    {
+      "name": "Detalle de Usuario",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/accounts/api/users/1/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["accounts", "api", "users", "1", ""]
+        }
+      }
+    },
+    {
+      "name": "Actualizar Usuario",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"first_name\": \"NombreActualizado\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/accounts/api/users/1/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["accounts", "api", "users", "1", ""]
+        }
+      }
+    },
+    {
+      "name": "Eliminar Usuario",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:8000/accounts/api/users/1/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["accounts", "api", "users", "1", ""]
+        }
+      }
+    }
+  ]
+}
